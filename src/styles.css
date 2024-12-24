@@ -1,1 +1,31 @@
-/* You can add global styles to this file, and also import other style files */
+*,
+::after,
+::before {
+    margin: 0;
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url(./assets/fonts/Roboto-Regular.ttf);
+  }
+
+  :root {
+    --clr-black: black;
+    --clr-lightgray: lightgray;
+    --clr-red: red;
+    --clr-white: white;
+    --clr-white-gray: rgb(249, 248, 251);
+    --clr-yellow: yellow;
+  }
+
+  body {
+    font-size: 16px;
+    font-family: Roboto, Arial, Helvetica, sans-serif;
+    background-color: var(--clr-white-gray);
+  }
+
+@media (min-width: 768px) {
+  body {
+    max-height: 100vh;
+  }
+}

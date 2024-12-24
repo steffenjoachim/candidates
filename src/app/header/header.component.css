@@ -1,0 +1,52 @@
+h1 {
+    font-size: 3rem;
+    text-align: center;
+    padding-top: 2rem;
+    background-image: linear-gradient(
+    180deg,
+    var(--clr-red),
+    var(--clr-yellow)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+
+}
+
+header {
+  height: 100%;
+    background-image: linear-gradient(
+        180deg,
+        var(--clr-black),
+        var(--clr-red),
+        var(--clr-yellow)
+      );
+}
+
+.sub-title {
+    margin-block: 1rem;
+    font-size: 1.5rem;
+    color: var(--clr-yellow);
+    font-weight: bold;
+    text-align: center;
+    padding-bottom: 1rem;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: center;
+  padding-bottom: .5rem;
+}
+
+button {
+  background: var(--clr-lightgray);
+  font-weight: bold;
+  padding: .5rem 1.5rem;
+  border-radius: .25rem;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: .7;
+}

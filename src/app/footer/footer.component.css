@@ -1,0 +1,35 @@
+footer {
+    background-color: var(--clr-lightgray);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4rem 2rem;
+}
+
+nav {
+    padding-bottom: 1rem;
+}
+
+a {
+    text-decoration: none;
+    color: var(--clr-black);
+}
+
+a:hover {
+    opacity: .5;
+}
+
+a + a {
+    margin-left: 1rem;
+}
+
+@media (min-width: 570px) { 
+    footer {
+        flex-direction: row;
+    } 
+
+    nav {
+        padding-bottom: 0;
+    }
+}
