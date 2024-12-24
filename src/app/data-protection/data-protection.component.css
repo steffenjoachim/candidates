@@ -1,0 +1,10 @@
+.data-protection-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+main {
+    flex: 1;
+    margin: 3rem;
+}

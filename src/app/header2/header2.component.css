@@ -1,0 +1,16 @@
+header {
+    background-color: var(--clr-lightgray);
+    padding-block: 3rem;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    background-color: var(--clr-white-gray);
+    padding: .5rem 1.5rem;
+    border-radius: .5rem;
+}
+
+a:hover {
+    opacity: .5;
+}
