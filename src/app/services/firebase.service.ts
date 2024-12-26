@@ -1,46 +1,31 @@
-import { Injectable } from "@angular/core";
-import { AngularFirestore } from "@angular/fire/compat/firestore";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { Injectable } from '@angular/core';
+import { Firestore, collection, collectionData, doc, updateDoc } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
-interface Candidate {
-    id: string;
-    name: string;
-    img: string;
-    votes: number;
+export interface Candidate {
+  id: string;
+  name: string;
+  img: string;
+  votes: number;
 }
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class FirebaseService {
-    private collectionName = "candidates";
+  private collectionName = 'candidates';
 
-    constructor(private firestore: AngularFirestore) {}
+  constructor(private firestore: Firestore) {}
 
-    // Alle Kandidaten laden
-    loadAllCandidates(): Observable<Candidate[]> {
-        return this.firestore
-            .collection<Candidate>(this.collectionName)
-            .snapshotChanges()
-            .pipe(
-                map(actions =>
-                    actions.map(a => {
-                        const data = a.payload.doc.data();
-                        const id = a.payload.doc.id;
-                        return { id, ...data };
-                    })
-                )
-            );
-    }
+  // Kandidaten laden
+  loadAllCandidates(): Observable<Candidate[]> {
+    const candidatesCollection = collection(this.firestore, this.collectionName);
+    return collectionData(candidatesCollection, { idField: 'id' }) as Observable<Candidate[]>;
+  }
 
-    // Stimmen aktualisieren
-    updateVotes(id: string, newVotes: number): Promise<void> {
-        return this.firestore
-            .collection(this.collectionName)
-            .doc(id)
-            .update({ votes: newVotes });
-    }
+  // Stimmen aktualisieren
+  updateVotes(id: string, newVotes: number): Promise<void> {
+    const candidateDoc = doc(this.firestore, `${this.collectionName}/${id}`);
+    return updateDoc(candidateDoc, { votes: newVotes });
+  }
 }
-
-// Bitte die letzte Eingabe ignorieren, ich war im falschen Projekt. Ich habe jetzt firebase.service.ts erstellt, wie vorgeschlagen und bekomme einen Fehler: id' is specified more than once, so this usage will be overwritten.ts(2783) bei return { id, ...data };

@@ -1,8 +1,16 @@
 <main>
-    <app-header></app-header>
-    <article class="card-container">
-      <app-card>
-      </app-card>
-    </article>
-    <app-footer></app-footer>
-  </main>
+  <app-header></app-header>
+  <article class="card-container">
+    <!-- Loop durch alle Kandidaten und rendere eine Karte für jeden -->
+    <app-card
+      *ngFor="let candidate of candidates"
+      [id]="candidate.id"
+      [name]="candidate.name"
+      [img]="candidate.img"
+      [votes]="candidate.votes"
+      (vote)="onVoteUpdated($event)">
+    </app-card>
+  </article>
+  <app-footer></app-footer>
+</main>
+
