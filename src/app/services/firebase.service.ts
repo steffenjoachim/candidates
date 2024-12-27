@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, collectionData, doc, updateDoc } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Firestore, collection, collectionData, updateDoc, doc, query } from '@angular/fire/firestore';
+import { Observable, tap } from 'rxjs';
 
 export interface Candidate {
   id: string;
@@ -10,22 +10,29 @@ export interface Candidate {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class FirebaseService {
   private collectionName = 'candidates';
 
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore) {console.log('Firestore erfolgreich initialisiert:', this.firestore);}
 
-  // Kandidaten laden
+  // Alle Kandidaten laden
   loadAllCandidates(): Observable<Candidate[]> {
     const candidatesCollection = collection(this.firestore, this.collectionName);
-    return collectionData(candidatesCollection, { idField: 'id' }) as Observable<Candidate[]>;
-  }
+    console.log('Collection erstellt:', candidatesCollection);
+  
+    return collectionData(candidatesCollection, { idField: 'id' }).pipe(
+      tap({
+        next: (data: any) => console.log('Kandidaten-Daten erhalten:', data),
+        error: (err) => console.error('Fehler beim Abrufen der Kandidaten:', err),
+      })
+    ) as Observable<Candidate[]>;
+  }  
 
   // Stimmen aktualisieren
-  updateVotes(id: string, newVotes: number): Promise<void> {
-    const candidateDoc = doc(this.firestore, `${this.collectionName}/${id}`);
-    return updateDoc(candidateDoc, { votes: newVotes });
+  async updateVotes(id: string, newVotes: number): Promise<void> {
+    const candidateDocRef = doc(this.firestore, `${this.collectionName}/${id}`);
+    await updateDoc(candidateDocRef, { votes: newVotes });
   }
 }
