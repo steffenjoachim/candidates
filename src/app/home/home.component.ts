@@ -30,14 +30,13 @@ export class HomeComponent implements OnInit {
   constructor(private firebaseService: FirebaseService) {}
 
   ngOnInit(): void {
-    console.log(this.firebaseService.loadAllCandidates().subscribe((candidates: Candidate[]) => {
-      this.candidates = candidates;
-    }))
-    // Alle Kandidaten laden, wenn die Komponente initialisiert wird
-    this.firebaseService.loadAllCandidates().subscribe((candidates: Candidate[]) => {
-      this.candidates = candidates;
+    this.firebaseService.loadAllCandidates().subscribe({
+      next: (candidates) => {
+        this.candidates = candidates;
+      },
+      error: (err) => console.error('Fehler beim Abonnieren der Kandidaten:', err),
     });
-  }
+  }  
 
   // Methode, die aufgerufen wird, wenn ein Kandidat gevotet wurde
   onVoteUpdated({ id, newVotes }: { id: string; newVotes: number }): void {
