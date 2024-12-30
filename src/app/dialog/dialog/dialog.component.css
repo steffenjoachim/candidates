@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000; /* Höher als alles andere auf der Seite */
+  z-index: 1; 
 }
 
 .dialog {
@@ -17,19 +17,38 @@
   border-radius: 8px;
   width: 400px;
   max-width: 90%;
-  z-index: 1001; /* Höher als .dialog-backdrop */
+  z-index: 2; 
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 1rem;
 }
   
   .button-group {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-block: 1.5rem;
+  }
+
+  .button-group button {
+    background: var(--clr-lightgray);
+    font-weight: bold;
+    padding: .5rem 1.5rem;
+    border-radius: .25rem;
+    border: none;
   }
   
   .close {
-    background: transparent;
+    background: var(--clr-red);
     border: none;
-    color: var(--clr-red);
+    border-radius: .25rem;
+    padding: .25rem .75rem;
+    color: var(--clr-white);
     cursor: pointer;
     font-size: 1.2rem;
   }

@@ -13,60 +13,54 @@ import { DialogComponent } from '../dialog/dialog/dialog.component';
   styleUrls: ['./header.component.css'],
 })
 export class HeaderComponent implements OnInit {
-  user$: Observable<User | null>; // Observable für den aktuellen Nutzer
-  currentUser: User | null = null; // Der aktuelle Nutzerwert (abonnierter Wert)
-  showLogin = false; // Zeigt den Dialog bei Bedarf an
+  user$: Observable<User | null>; // observable for current user
+  currentUser: User | null = null; // the current user valu (subscribed value)
+  showLogin = false; // shows the dialog if needed
 
   constructor(private authService: AuthService) {
     this.user$ = this.authService.user$; // Verbindung mit AuthService herstellen
   }
 
   ngOnInit(): void {
-    // Abonniert den Wert von user$ und speichert ihn in currentUser
+    // subscribes user$ and sores it in currentUser
     this.user$.subscribe((user) => {
       this.currentUser = user;
     });
   }
 
-  // Klick-Handler für den Haupt-Button im Header
+  //click handler for the main btn in header
   onAuthButtonClick(user: User | null): void {
   if (user) {
-    console.log('User logged in, logging out...');
     this.logout();
   } else {
-    console.log('No user logged in, showing login dialog...');
-    this.showLogin = true;
+    this.showLogin = true; // dialog will be shown
   }
 }
 
-  // Anmeldung über den Dialog
+  // login via dialog
   async onLogin(credentials: { email: string; password: string }): Promise<void> {
-    console.log('clicked')
     try {
       await this.authService.login(credentials.email, credentials.password);
-      this.showLogin = false; // Dialog schließen
-      console.log('Anmeldung erfolgreich!');
+      this.showLogin = false; // close dialog
     } catch (error) {
       console.error('Fehler beim Anmelden:', error);
     }
   }
 
-  // Registrierung über den Dialog
+  // registration via dialog
   async onRegister(credentials: { email: string; password: string }): Promise<void> {
     try {
       await this.authService.register(credentials.email, credentials.password);
-      this.showLogin = false; // Dialog schließen
-      console.log('Registrierung erfolgreich!');
+      this.showLogin = false; // close dialog
     } catch (error) {
       console.error('Fehler bei der Registrierung:', error);
     }
   }
 
-  // Abmeldung
+  // checkout
   async logout(): Promise<void> {
     try {
       await this.authService.logout();
-      console.log('Abmeldung erfolgreich!');
     } catch (error) {
       console.error('Fehler beim Abmelden:', error);
     }
