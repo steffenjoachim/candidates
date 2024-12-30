@@ -10,39 +10,36 @@ export class AuthService {
   user$: Observable<User | null>;
 
   constructor(private auth: Auth) {
-    // Beobachtet Benutzerstatus
+    // watches user status
     this.user$ = new Observable((observer) => {
       onAuthStateChanged(this.auth, (user) => observer.next(user));
     });
   }
 
-  // Benutzer anmelden
+  // user login
   async login(email: string, password: string): Promise<void> {
     try {
       await signInWithEmailAndPassword(this.auth, email, password);
-      console.log('Erfolgreich angemeldet!');
     } catch (error) {
       console.error('Fehler beim Anmelden:', error);
       throw error;
     }
   }
 
-  // Benutzer registrieren
+  // register user
   async register(email: string, password: string): Promise<void> {
     try {
-      await createUserWithEmailAndPassword(this.auth, email, password);
-      console.log('Erfolgreich registriert!');
+      await createUserWithEmailAndPassword(this.auth, email, password)
     } catch (error) {
       console.error('Fehler bei der Registrierung:', error);
       throw error;
     }
   }
 
-  // Benutzer abmelden
+  // user logout
   async logout(): Promise<void> {
     try {
       await signOut(this.auth);
-      console.log('Erfolgreich abgemeldet!');
     } catch (error) {
       console.error('Fehler beim Abmelden:', error);
       throw error;
