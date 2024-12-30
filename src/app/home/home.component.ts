@@ -4,6 +4,7 @@ import { HeaderComponent } from '../header/header.component';
 import { CardComponent } from '../card/card.component';
 import { FooterComponent } from '../footer/footer.component';
 import { FirebaseService } from '../services/firebase.service';
+import { AuthService } from '../services/auth.service';
 
 interface Candidate {
   id: string;
@@ -26,8 +27,15 @@ interface Candidate {
 })
 export class HomeComponent implements OnInit {
   candidates: Candidate[] = [];
+  isLoggedIn = false;
 
-  constructor(private firebaseService: FirebaseService) {}
+  constructor(private firebaseService: FirebaseService,
+              private authService: AuthService
+  ) {
+    this.authService.user$.subscribe(user => {
+      this.isLoggedIn = !!user; // Prüfen, ob ein User angemeldet ist
+    });
+  }
 
   ngOnInit(): void {
     this.firebaseService.loadAllCandidates().subscribe({

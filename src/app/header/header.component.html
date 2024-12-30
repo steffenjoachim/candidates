@@ -1,7 +1,19 @@
 <header>
     <h1>Wahl Umfrage</h1>
-    <p class="sub-title">Stimmen Sie für den von Ihnen bevorzugten Kanditaten ab!</p>
+    <p class="sub-title">Stimmen Sie für den von Ihnen bevorzugten Kandidaten ab!</p>
     <div class="btn-container">
-        <button (click)="login()">Anmelden</button>
+        <!-- Prüft, ob der Benutzer eingeloggt ist -->
+        <button (click)="onAuthButtonClick(currentUser)">
+            {{ currentUser ? 'Abmelden' : 'Anmelden' }}
+        </button>
     </div>
 </header>
+
+<!-- Dialog-Komponente -->
+<div *ngIf="showLogin">
+    <app-dialog
+      (login)="onLogin($event)"
+      (register)="onRegister($event)"
+      (closeDialog)="showLogin = false">
+    </app-dialog>
+  </div>  
