@@ -16,17 +16,11 @@ export class DialogComponent {
   @Output() register = new EventEmitter<{ email: string; password: string }>();
   @Output() closeDialog = new EventEmitter<void>();
 
-  isVisible = false;
   isRegisterMode = false;
   email = '';
   password = '';
 
-  show(): void {
-    this.isVisible = true;
-  }
-
   close(): void {
-    this.isVisible = false;
     this.closeDialog.emit();
   }
 
@@ -41,6 +35,6 @@ export class DialogComponent {
     } else {
       this.login.emit(credentials);
     }
-    this.close();
+    this.closeDialog.emit(); // Dialog schließen
   }
 }
