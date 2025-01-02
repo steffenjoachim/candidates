@@ -1,6 +1,6 @@
-<div class="dialog-backdrop"> 
+<div class="dialog-backdrop" *ngIf="isDialogVisible">
   <div class="dialog">
-    <h2>{{ isRegisterMode ? 'Registrieren' : 'Anmelden' }}</h2>
+    <h2>{{ isRegisterMode() ? 'Registrieren' : 'Anmelden' }}</h2>
     <form (ngSubmit)="onSubmit()">
       <label for="email">E-Mail:</label>
       <input id="email" [(ngModel)]="email" name="email" required type="email" />
@@ -9,10 +9,16 @@
       <input id="password" [(ngModel)]="password" name="password" required type="password" />
 
       <div class="button-group">
-        <button type="submit">{{ isRegisterMode ? 'Registrieren' : 'Anmelden' }}</button>
-        <button type="button" (click)="toggleMode()">Zum {{ isRegisterMode ? 'Anmelden' : 'Registrieren' }}</button>
+        <button type="submit">{{ isRegisterMode() ? 'Registrieren' : 'Anmelden' }}</button>
+        <button *ngIf="!isRegisterMode()" type="button" (click)="toggleMode()">Zum Registrieren</button>
       </div>
     </form>
     <button class="close" (click)="close()">Schließen</button>
   </div>
+</div>
+
+<!-- Popup for successful registration -->
+<div class="popup" *ngIf="showSuccessMessage()">
+  <p>Registrierung erfolgreich! Bitte melden Sie sich an.</p>
+  <p class="ok" (click)="closePopup()">OK</p>
 </div>

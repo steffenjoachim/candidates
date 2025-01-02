@@ -14,7 +14,6 @@ h1 {
 }
 
 header {
-  height: 100%;
     background-image: linear-gradient(
         180deg,
         var(--clr-black),
