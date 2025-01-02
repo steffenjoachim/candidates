@@ -1,40 +1,69 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, signal } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import {Auth,createUserWithEmailAndPassword } from '@angular/fire/auth';
+  
 @Component({
   selector: 'app-dialog',
-  imports: [
-    CommonModule,
-    FormsModule, 
-    ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './dialog.component.html',
-  styleUrls: ['./dialog.component.css']
+  styleUrls: ['./dialog.component.css'],
 })
 export class DialogComponent {
-  @Output() login = new EventEmitter<{ email: string; password: string }>();
-  @Output() register = new EventEmitter<{ email: string; password: string }>();
-  @Output() closeDialog = new EventEmitter<void>();
+  email: string = '';
+  password: string = '';
+  isRegisterMode = signal(false);
+  isDialogVisible = signal(false);
+  showSuccessMessage = signal(false);
 
-  isRegisterMode = false;
-  email = '';
-  password = '';
+  @Output() loginEvent = new EventEmitter<{
+    email: string;
+    password: string;
+  }>();
+
+  constructor(private auth: Auth) {}
+
+  open(isRegisterMode: boolean = false): void {
+    this.isDialogVisible.set(true); 
+    this.isRegisterMode.set(true);
+    this.email = ''; 
+    this.password = '';
+  }
 
   close(): void {
-    this.closeDialog.emit();
+    this.isDialogVisible.set(false); 
+    this.email = ''; 
+    this.password = '';
   }
 
   toggleMode(): void {
-    this.isRegisterMode = !this.isRegisterMode;
-  }
+    this.isRegisterMode.update(value => !value);
+  }  
 
-  onSubmit(): void {
+  login(): void {
     const credentials = { email: this.email, password: this.password };
-    if (this.isRegisterMode) {
-      this.register.emit(credentials);
-    } else {
-      this.login.emit(credentials);
+    this.loginEvent.emit(credentials); 
+  }
+  
+  async register(): Promise<void> {
+    try {
+      await createUserWithEmailAndPassword(this.auth, this.email, this.password);
+      this.showSuccessMessage.set(true); 
+    } catch (error) {
+      console.error('Fehler bei der Registrierung:', error);
     }
-    this.closeDialog.emit(); // Dialog schließen
+  }
+  
+  onSubmit(): void {
+    if (this.isRegisterMode()) {
+      this.register();
+    } else {
+      this.login();
+    }
+  }  
+
+  closePopup(): void {
+    this.showSuccessMessage.set(false); 
+    this.isRegisterMode.set(false);
   }
 }

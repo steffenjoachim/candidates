@@ -1,63 +1,58 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../services/auth.service';
 import { Observable } from 'rxjs';
 import { User } from 'firebase/auth';
-import { AuthService } from '../services/auth.service';
 import { DialogComponent } from '../dialog/dialog/dialog.component';
 
 @Component({
   selector: 'app-header',
-  standalone: true,
-  imports: [CommonModule, DialogComponent],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
+  imports: [ CommonModule, 
+             DialogComponent]
 })
 export class HeaderComponent implements OnInit {
-  user$: Observable<User | null>; // observable for current user
-  currentUser: User | null = null; // the current user valu (subscribed value)
-  showLogin = false; // shows the dialog if needed
+  user$: Observable<User | null>;
+  currentUser: User | null = null;
+  showLogin = signal(false);
 
   constructor(private authService: AuthService) {
-    this.user$ = this.authService.user$; // Verbindung mit AuthService herstellen
+    this.user$ = this.authService.user$;
   }
 
   ngOnInit(): void {
-    // subscribes user$ and sores it in currentUser
     this.user$.subscribe((user) => {
       this.currentUser = user;
     });
   }
 
-  //click handler for the main btn in header
   onAuthButtonClick(user: User | null): void {
-  if (user) {
-    this.logout();
-  } else {
-    this.showLogin = true; // dialog will be shown
+    if (user) {
+      this.logout();
+    } else {
+      this.showLogin.set(true);
+    }
   }
-}
 
-  // login via dialog
   async onLogin(credentials: { email: string; password: string }): Promise<void> {
     try {
       await this.authService.login(credentials.email, credentials.password);
-      this.showLogin = false; // close dialog
+      this.showLogin.set(false);
     } catch (error) {
       console.error('Fehler beim Anmelden:', error);
     }
   }
 
-  // registration via dialog
   async onRegister(credentials: { email: string; password: string }): Promise<void> {
     try {
       await this.authService.register(credentials.email, credentials.password);
-      this.showLogin = false; // close dialog
+      this.showLogin.set(false);
     } catch (error) {
       console.error('Fehler bei der Registrierung:', error);
     }
   }
 
-  // checkout
   async logout(): Promise<void> {
     try {
       await this.authService.logout();
