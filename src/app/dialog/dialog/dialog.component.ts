@@ -2,7 +2,8 @@ import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {Auth,createUserWithEmailAndPassword } from '@angular/fire/auth';
-  
+import { FirebaseService } from '../../services/firebase.service';
+
 @Component({
   selector: 'app-dialog',
   imports: [CommonModule, FormsModule],
@@ -21,7 +22,9 @@ export class DialogComponent {
     password: string;
   }>();
 
-  constructor(private auth: Auth) {}
+  constructor(private auth: Auth,
+              private firebaseService: FirebaseService
+  ) {}
 
   open(isRegisterMode: boolean = false): void {
     this.isDialogVisible.set(true); 
@@ -48,6 +51,7 @@ export class DialogComponent {
   async register(): Promise<void> {
     try {
       await createUserWithEmailAndPassword(this.auth, this.email, this.password);
+      await this.firebaseService.checkIfHasVoted(this.email);
       this.showSuccessMessage.set(true); 
     } catch (error) {
       console.error('Fehler bei der Registrierung:', error);
