@@ -10,7 +10,7 @@ import { DialogComponent } from '../dialog/dialog/dialog.component';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
   imports: [ CommonModule, 
-             DialogComponent]
+             DialogComponent ]
 })
 export class HeaderComponent implements OnInit {
   user$: Observable<User | null>;
@@ -44,14 +44,16 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  async onRegister(credentials: { email: string; password: string }): Promise<void> {
-    try {
-      await this.authService.register(credentials.email, credentials.password);
-      this.showLogin.set(false);
-    } catch (error) {
-      console.error('Fehler bei der Registrierung:', error);
-    }
-  }
+  // async onRegister(credentials: { email: string; password: string }): Promise<void> {
+  //   try {
+  //     await this.authService.register(credentials.email, credentials.password);
+  //     await this.firebaseService.checkIfHasVoted(credentials.email);
+  //     console.log('Hi')
+  //     this.showLogin.set(false);
+  //   } catch (error) {
+  //     console.error('Fehler bei der Registrierung:', error);
+  //   }
+  // }
 
   async logout(): Promise<void> {
     try {

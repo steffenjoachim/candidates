@@ -18,22 +18,22 @@ interface Candidate {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: [
-    CommonModule,
-    HeaderComponent,
-    FooterComponent,
-    CardComponent,
-  ],
+  imports: [CommonModule, HeaderComponent, FooterComponent, CardComponent],
 })
 export class HomeComponent implements OnInit {
   candidates: Candidate[] = [];
   isLoggedIn = false;
+  currentUser: any;
 
-  constructor(private firebaseService: FirebaseService,
-              private authService: AuthService
+  constructor(
+    private firebaseService: FirebaseService,
+    private authService: AuthService
   ) {
-    this.authService.user$.subscribe(user => {
+    console.log(this.currentUser)
+    console.log(this.firebaseService)
+    this.authService.user$.subscribe((user) => {
       this.isLoggedIn = !!user; // Prüfen, ob ein User angemeldet ist
+      this.currentUser = user;
     });
   }
 
@@ -42,22 +42,43 @@ export class HomeComponent implements OnInit {
       next: (candidates) => {
         this.candidates = candidates;
       },
-      error: (err) => console.error('Fehler beim Abonnieren der Kandidaten:', err),
+      error: (err) =>
+        console.error('Fehler beim Abonnieren der Kandidaten:', err),
     });
-  }  
+  }
 
-  // Methode, die aufgerufen wird, wenn ein Kandidat gevotet wurde
-  onVoteUpdated({ id, newVotes }: { id: string; newVotes: number }): void {
-    this.firebaseService.updateVotes(id, newVotes)
-      .then(() => {
-        // Lokale Liste der Kandidaten aktualisieren (optional)
+  // Methode, die aufgerufen wird, wenn für ein Kandidaten gevotet wurde
+  async onVoteUpdated({ id, newVotes }: { id: string; newVotes: number }): Promise<void> {
+    if (this.currentUser && this.currentUser.email) { // Sicherstellen, dass die E-Mail existiert
+      const email = this.currentUser.email;
+  
+      try {
+        // Überprüfen, ob der Benutzer bereits abgestimmt hat
+        const hasVoted = await this.firebaseService.checkIfHasVoted(email);
+        if (hasVoted) {
+          alert('Sie haben bereits abgestimmt!');
+          return; // Keine weitere Aktion ausführen
+        }
+  
+        // Wenn der Benutzer noch nicht abgestimmt hat, aktualisieren wir die Stimmen
+        await this.firebaseService.updateVotes(id, newVotes);
+  
+        // Den Benutzer auf "voted" setzen
+        await this.firebaseService.setUserVoted(email);
+  
+        // Lokale Liste der Kandidaten aktualisieren
         const candidate = this.candidates.find((c) => c.id === id);
         if (candidate) {
           candidate.votes = newVotes;
         }
-      })
-      .catch((error) => {
-        console.error('Fehler beim Aktualisieren der Stimmen:', error);
-      });
+  
+        alert('Danke für Ihre Stimme!');
+      } catch (error) {
+        console.error('Fehler beim Abstimmungsprozess:', error);
+      }
+    } else {
+      alert('Bitte melden Sie sich an, um abzustimmen.');
+    }
   }
+  
 }
