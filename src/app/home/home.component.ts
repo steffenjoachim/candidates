@@ -20,17 +20,21 @@ interface Candidate {
   standalone: true,
   imports: [CommonModule, HeaderComponent, FooterComponent, CardComponent],
 })
+
 export class HomeComponent implements OnInit {
   candidates: Candidate[] = [];
   isLoggedIn = false;
+
+  showVotingSuccessPopup = false; // Popup für erfolgreiche Abstimmung
+  showAlreadyVotedPopup = false; // Popup für "Bereits abgestimmt"
+  votedCandidateName = ''; // Name des Kandidaten für Popups
+  votedCandidateId = ''; // ID des Kandidaten für Stimmenänderung
   currentUser: any;
 
   constructor(
     private firebaseService: FirebaseService,
     private authService: AuthService
   ) {
-    console.log(this.currentUser)
-    console.log(this.firebaseService)
     this.authService.user$.subscribe((user) => {
       this.isLoggedIn = !!user; // Prüfen, ob ein User angemeldet ist
       this.currentUser = user;
@@ -47,32 +51,22 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  // Methode, die aufgerufen wird, wenn für ein Kandidaten gevotet wurde
   async onVoteUpdated({ id, newVotes }: { id: string; newVotes: number }): Promise<void> {
-    if (this.currentUser && this.currentUser.email) { // Sicherstellen, dass die E-Mail existiert
+    if (this.currentUser && this.currentUser.email) {
       const email = this.currentUser.email;
-  
+
       try {
-        // Überprüfen, ob der Benutzer bereits abgestimmt hat
-        const hasVoted = await this.firebaseService.checkIfHasVoted(email);
-        if (hasVoted) {
-          alert('Sie haben bereits abgestimmt!');
-          return; // Keine weitere Aktion ausführen
+        // Prüfen, ob der Benutzer bereits abgestimmt hat
+        const votedFor = await this.firebaseService.checkIfHasVoted(email);
+        if (votedFor) {
+          this.votedCandidateName = votedFor; // Setze den Namen des Kandidaten
+          this.votedCandidateId = id; // Speichere die ID des neuen Kandidaten
+          this.showAlreadyVotedPopup = true; // Zeige das "Bereits abgestimmt"-Popup
+          return; // Beende den Vorgang
         }
-  
-        // Wenn der Benutzer noch nicht abgestimmt hat, aktualisieren wir die Stimmen
-        await this.firebaseService.updateVotes(id, newVotes);
-  
-        // Den Benutzer auf "voted" setzen
-        await this.firebaseService.setUserVoted(email);
-  
-        // Lokale Liste der Kandidaten aktualisieren
-        const candidate = this.candidates.find((c) => c.id === id);
-        if (candidate) {
-          candidate.votes = newVotes;
-        }
-  
-        alert('Danke für Ihre Stimme!');
+
+        // Stimmen aktualisieren, wenn der Benutzer noch nicht abgestimmt hat
+        await this.updateVote(id, newVotes, email);
       } catch (error) {
         console.error('Fehler beim Abstimmungsprozess:', error);
       }
@@ -80,5 +74,66 @@ export class HomeComponent implements OnInit {
       alert('Bitte melden Sie sich an, um abzustimmen.');
     }
   }
+
+  async changeVote(): Promise<void> {
+    if (this.currentUser && this.currentUser.email) {
+      const email = this.currentUser.email;
   
+      try {
+        // Finde den alten Kandidaten, für den die Stimme bisher abgegeben wurde
+        const oldCandidate = this.candidates.find(
+          (c) => c.name === this.votedCandidateName
+        );
+  
+        if (oldCandidate) {
+          // Stimme des alten Kandidaten reduzieren
+          await this.firebaseService.updateVotes(oldCandidate.id, oldCandidate.votes - 1);
+          oldCandidate.votes -= 1; // Lokale Liste aktualisieren
+        }
+  
+        // Stimme des neuen Kandidaten hinzufügen
+        const newCandidate = this.candidates.find((c) => c.id === this.votedCandidateId);
+        if (newCandidate) {
+          await this.updateVote(this.votedCandidateId, newCandidate.votes + 1, email);
+  
+          // Popups steuern
+          this.showAlreadyVotedPopup = false; // Schließe das "Bereits abgestimmt"-Popup
+          this.showVotingSuccessPopup = true; // Zeige das "Erfolg"-Popup
+        }
+      } catch (error) {
+        console.error('Fehler beim Wechsel der Stimme:', error);
+      }
+    }
+  }  
+
+  async updateVote(candidateId: string, newVotes: number, email: string): Promise<void> {
+    try {
+      // Stimmen aktualisieren
+      await this.firebaseService.updateVotes(candidateId, newVotes);
+
+      // Benutzer als "abgestimmt" markieren
+      const candidate = this.candidates.find((c) => c.id === candidateId);
+      if (candidate) {
+        await this.firebaseService.setUserVoted(email, candidate.name);
+
+        // Lokale Liste der Kandidaten aktualisieren
+        candidate.votes = newVotes;
+
+        // Popup vorbereiten
+        this.votedCandidateName = candidate.name;
+        this.showVotingSuccessPopup = true;
+      }
+    } catch (error) {
+      console.error('Fehler beim Aktualisieren der Stimme:', error);
+    }
+  }
+
+  // Popups schließen
+  closeSuccessPopup(): void {
+    this.showVotingSuccessPopup = false;
+  }
+
+  closeAlreadyVotedPopup(): void {
+    this.showAlreadyVotedPopup = false;
+  }
 }

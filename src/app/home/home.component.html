@@ -1,18 +1,33 @@
 <main>
   <app-header></app-header>
   <article class="card-container">
-    <!-- Loop durch alle Kandidaten und rendere eine Karte für jeden -->
-    <app-card 
-  *ngFor="let candidate of candidates" 
-  [id]="candidate.id" 
-  [name]="candidate.name" 
-  [img]="candidate.img" 
-  [votes]="candidate.votes" 
-  [isLoggedIn]="isLoggedIn" 
-  (vote)="onVoteUpdated($event)">
-</app-card>
-
+    <!-- Loops durch alle Kandidaten und rendere eine Karte für jeden -->
+    <app-card *ngFor="let candidate of candidates" 
+              [id]="candidate.id" 
+              [name]="candidate.name" 
+              [img]="candidate.img"
+              [votes]="candidate.votes" 
+              [isLoggedIn]="isLoggedIn" 
+              (vote)="onVoteUpdated($event)">
+    </app-card>
   </article>
+  <!-- Popup für die Erfolgsmeldung -->
+  <article *ngIf="showVotingSuccessPopup" class="popup">
+    <div class="popup-content">
+      <h2>Danke für Ihre Stimme für {{ votedCandidateName }}!</h2>
+      <button (click)="closeSuccessPopup()">Schließen</button>
+    </div>
+  </article>  
+
+  <article *ngIf="showAlreadyVotedPopup" class="popup">
+    <div class="popup-content">
+      <h2>Sie haben bereits für {{ votedCandidateName }} abgestimmt!</h2>
+      <p>Möchten Sie Ihre Stimme ändern?</p>
+      <button (click)="changeVote()">Ja, ich möchte wechseln</button>
+      <button (click)="closeAlreadyVotedPopup()">Nein, schließen</button>
+    </div>
+  </article>
+  
+
   <app-footer></app-footer>
 </main>
-
