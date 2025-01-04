@@ -10,10 +10,9 @@
 </header>
 
 <!-- Dialog-Komponente -->
-<div *ngIf="showLogin()">
+<article *ngIf="showLogin()">
     <app-dialog 
-  (loginEvent)="onLogin($event)" 
-  (closeDialog)="showLogin.set(false)">
-</app-dialog>
-
-</div>
+    (loginEvent)="onLogin($event)" 
+    (closeDialog)="showLogin.set(false)">
+    </app-dialog>
+</article>

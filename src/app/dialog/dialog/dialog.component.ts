@@ -10,6 +10,7 @@ import { FirebaseService } from '../../services/firebase.service';
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.css'],
 })
+
 export class DialogComponent {
   email: string = '';
   password: string = '';
