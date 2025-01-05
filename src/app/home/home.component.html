@@ -1,7 +1,7 @@
 <main>
   <app-header></app-header>
   <article class="card-container">
-    <!-- Loops durch alle Kandidaten und rendere eine Karte für jeden -->
+    <!-- Loops through "candidates" and renders a card for each of them-->
     <app-card *ngFor="let candidate of candidates" 
               [id]="candidate.id" 
               [name]="candidate.name" 
@@ -10,16 +10,22 @@
               [isLoggedIn]="isLoggedIn" 
               (vote)="onVoteUpdated($event)">
     </app-card>
+    <p  *ngIf="!currentUser"
+        class="vote-message">Um  abzustimmen müssen Sie angemeldet / registriert sein (Anmelde-Button im Header!)</p>
   </article>
-  <!-- Popup für die Erfolgsmeldung -->
-  <article *ngIf="showVotingSuccessPopup" class="popup">
+
+  <!-- Popup for success message -->
+  <article *ngIf="showVotingSuccessPopup" 
+            class="popup">
     <div class="popup-content">
       <h2>Danke für Ihre Stimme für {{ votedCandidateName }}!</h2>
       <button (click)="closeSuccessPopup()">Schließen</button>
     </div>
   </article>  
 
-  <article *ngIf="showAlreadyVotedPopup" class="popup">
+  <!-- Popup for already voted message -->
+  <article *ngIf="showAlreadyVotedPopup" 
+           class="popup">
     <div class="popup-content">
       <h2>Sie haben bereits für {{ votedCandidateName }} abgestimmt!</h2>
       <p>Möchten Sie Ihre Stimme ändern?</p>
