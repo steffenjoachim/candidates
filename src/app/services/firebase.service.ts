@@ -17,17 +17,7 @@ import {
   from
 } from 'rxjs';
 
-export interface Candidate {
-  id: string;
-  name: string;
-  img: string;
-  votes: number;
-}
-
-export interface UserVote {
-  email: string;
-  votedFor: string;
-}
+import { Candidate, UserVote } from '../interfaces/voting.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +28,6 @@ export class FirebaseService {
 
   constructor(private firestore: Firestore) {}
 
-  // Alle Kandidaten laden
   loadAllCandidates(): Observable < Candidate[] > {
     const candidatesCollection = collection(this.firestore, this.collectionName);
     return from(getDocs(candidatesCollection).then(snapshot => {
@@ -49,13 +38,11 @@ export class FirebaseService {
     }));
   }
 
-  // Stimmen aktualisieren
   async updateVotes(id: string, newVotes: number): Promise < void > {
     const candidateDocRef = doc(this.firestore, `${this.collectionName}/${id}`);
     await updateDoc(candidateDocRef, { votes: newVotes });
   }
 
-  // Überprüfen, ob der Benutzer bereits abgestimmt hat
   async checkIfHasVoted(email: string): Promise<string> {
     const usersCollection = collection(this.firestore, this.collectionUsers);
     const userQuery = query(usersCollection, where('email', '==', email));
@@ -63,15 +50,15 @@ export class FirebaseService {
 
     if (!userSnapshot.empty) {
       const userData = userSnapshot.docs[0].data() as UserVote;
-      return userData.votedFor; // Gibt den Kandidaten zurück, für den abgestimmt wurde (oder '' falls noch nicht abgestimmt)
+      return userData.votedFor; // returns the candidate who was voted for (or '' if no vote has been taken yet)
     }
 
-    // Neuer Benutzer hinzufügen, wenn er nicht existiert
+    // adds new user if it does not exist
     await addDoc(usersCollection, { email, votedFor: '' }); // votedFor wird mit leerem String initialisiert
-    return ''; // Benutzer hat noch nicht abgestimmt
+    return ''; // user has not voted jet
   }
 
-  // Abstimmungsstatus aktualisieren
+  // updates voting status
   async setUserVoted(email: string, votedFor: string): Promise<void> {
     const usersCollection = collection(this.firestore, this.collectionUsers);
     const userQuery = query(usersCollection, where('email', '==', email));
@@ -79,7 +66,7 @@ export class FirebaseService {
 
     if (!userSnapshot.empty) {
       const userDocRef = userSnapshot.docs[0].ref;
-      await updateDoc(userDocRef, { votedFor }); // Kandidat wird im Feld `votedFor` gespeichert
+      await updateDoc(userDocRef, { votedFor }); // stores candidate in `votedFor`
     }
   }
 
@@ -90,8 +77,7 @@ export class FirebaseService {
   
     if (!userSnapshot.empty) {
       const userDocRef = userSnapshot.docs[0].ref;
-      await updateDoc(userDocRef, { votedFor: '' }); // Zurücksetzen der Stimme
-    }
+      await updateDoc(userDocRef, { votedFor: '' }); // resets the vote
   }
-  
+ }
 }

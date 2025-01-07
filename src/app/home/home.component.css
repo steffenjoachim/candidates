@@ -6,11 +6,18 @@ main {
 
 .card-container {
     display: flex;
+    flex-direction: column;
     flex: 1;
-    gap: 1rem;
-    flex-wrap: wrap;
     justify-content: center;
     padding-bottom: 1rem;
+}
+
+.card-wrapper {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-block: 1rem;
+    justify-content: center;
 }
 
 .popup-content {
