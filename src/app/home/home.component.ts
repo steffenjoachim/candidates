@@ -127,12 +127,12 @@ export class HomeComponent implements OnInit {
   }
 
   // closes popups
-  closeSuccessPopup(): void {
-    this.showVotingSuccessPopup = false;
-  }
-
-  closeAlreadyVotedPopup(): void {
-    this.showAlreadyVotedPopup = false;
-  }
+  closePopup(popupType: 'success' | 'alreadyVoted'): void {
+    if (popupType === 'success') {
+      this.showVotingSuccessPopup = false;
+    } else if (popupType === 'alreadyVoted') {
+      this.showAlreadyVotedPopup = false;
+    }
+  }  
 
 }

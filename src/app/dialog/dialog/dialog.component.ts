@@ -15,7 +15,6 @@ export class DialogComponent {
   email: string = '';
   password: string = '';
   isRegisterMode = signal(false);
-  isDialogVisible = signal(false);
   showSuccessMessage = signal(false);
 
   @Output() loginEvent = new EventEmitter<{
@@ -28,16 +27,15 @@ export class DialogComponent {
   ) {}
 
   open(isRegisterMode: boolean = false): void {
-    this.isDialogVisible.set(true); 
-    this.isRegisterMode.set(true);
+    this.isRegisterMode.set(isRegisterMode);
     this.email = ''; 
     this.password = '';
   }
 
   close(): void {
-    this.isDialogVisible.set(false); 
     this.email = ''; 
     this.password = '';
+    this.loginEvent.emit(undefined);
   }
 
   toggleMode(): void {
@@ -53,13 +51,19 @@ export class DialogComponent {
     try {
       await createUserWithEmailAndPassword(this.auth, this.email, this.password);
       await this.firebaseService.checkIfHasVoted(this.email);
-      this.showSuccessMessage.set(true); 
+  
+      this.showSuccessMessage.set(true); // shows success message
+  
+      // user logout after registration
+      await this.auth.signOut();
     } catch (error) {
       console.error('Fehler bei der Registrierung:', error);
     }
   }
   
+  
   onSubmit(): void {
+    console.log(this.isRegisterMode())
     if (this.isRegisterMode()) {
       this.register();
     } else {

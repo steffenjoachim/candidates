@@ -1,21 +1,24 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { Observable } from 'rxjs';
 import { User } from 'firebase/auth';
 import { DialogComponent } from '../dialog/dialog/dialog.component';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
-  imports: [ CommonModule, 
-             DialogComponent ]
+  imports: [CommonModule, DialogComponent]
 })
 export class HeaderComponent implements OnInit {
   user$: Observable<User | null>;
   currentUser: User | null = null;
   showLogin = signal(false);
+  showLogout = signal(false);
+
+  private cdr = inject(ChangeDetectorRef); // Inject ChangeDetectorRef
 
   constructor(private authService: AuthService) {
     this.user$ = this.authService.user$;
@@ -24,36 +27,33 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.user$.subscribe((user) => {
       this.currentUser = user;
+      this.cdr.detectChanges(); // Trigger view update manually
     });
   }
 
-  onAuthButtonClick(user: User | null): void {
-    if (user) {
-      this.logout();
-    } else {
-      this.showLogin.set(true);
-    }
+// opens the dialog component
+onAuthButtonClick(user: User | null): void {
+  if (user) {
+    this.logout();
+  } else {
+    //ensures that app dialog becomes visible
+    this.showLogin.set(true);
+    this.showLogout.set(true);
   }
+}
 
-  async onLogin(credentials: { email: string; password: string }): Promise<void> {
+  async onLogin(credentials: { email: string; password: string } | undefined): Promise<void> {
     try {
-      await this.authService.login(credentials.email, credentials.password);
+      if (credentials) {
+        await this.authService.login(credentials.email, credentials.password);
+      }
       this.showLogin.set(false);
+      this.cdr.detectChanges(); // Update view after login
     } catch (error) {
       console.error('Fehler beim Anmelden:', error);
     }
+    this.showLogout.set(false);
   }
-
-  // async onRegister(credentials: { email: string; password: string }): Promise<void> {
-  //   try {
-  //     await this.authService.register(credentials.email, credentials.password);
-  //     await this.firebaseService.checkIfHasVoted(credentials.email);
-  //     console.log('Hi')
-  //     this.showLogin.set(false);
-  //   } catch (error) {
-  //     console.error('Fehler bei der Registrierung:', error);
-  //   }
-  // }
 
   async logout(): Promise<void> {
     try {
