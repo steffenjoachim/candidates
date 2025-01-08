@@ -22,3 +22,9 @@
   <p>Registrierung erfolgreich! Bitte melden Sie sich an.</p>
   <p class="ok" (click)="closePopup()">OK</p>
 </div>
+
+<!-- Popup for error messages -->
+<div class="popup" *ngIf="errorMessage()">
+  <p class="error">{{ errorMessage() }}</p>
+  <p class="ok" (click)="closePopup()">OK</p>
+</div>
