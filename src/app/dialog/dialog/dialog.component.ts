@@ -16,6 +16,8 @@ export class DialogComponent {
   password: string = '';
   isRegisterMode = signal(false);
   showSuccessMessage = signal(false);
+  errorMessage = signal<string | null>(null);
+
 
   @Output() loginEvent = new EventEmitter<{
     email: string;
@@ -53,17 +55,22 @@ export class DialogComponent {
       await this.firebaseService.checkIfHasVoted(this.email);
   
       this.showSuccessMessage.set(true); // shows success message
-  
-      // user logout after registration
-      await this.auth.signOut();
-    } catch (error) {
-      console.error('Fehler bei der Registrierung:', error);
+      await this.auth.signOut(); // user is logged out after registration
+    } catch (error: any) {
+      if (error.code === 'auth/email-already-in-use') {
+        this.errorMessage.set('Diese E-Mail-Adresse wird bereits verwendet.');
+      } else if (error.code === 'auth/invalid-email') {
+        this.errorMessage.set('Die eingegebene E-Mail-Adresse ist ungültig.');
+      } else if (error.code === 'auth/weak-password') {
+        this.errorMessage.set('Das Passwort ist zu schwach. Bitte verwenden Sie ein stärkeres Passwort.');
+      } else {
+        this.errorMessage.set('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
+        console.error('Fehler bei der Registrierung:', error);
+      }
     }
   }
   
-  
   onSubmit(): void {
-    console.log(this.isRegisterMode())
     if (this.isRegisterMode()) {
       this.register();
     } else {
@@ -74,5 +81,6 @@ export class DialogComponent {
   closePopup(): void {
     this.showSuccessMessage.set(false); 
     this.isRegisterMode.set(false);
+    this.errorMessage.set(null);
   }
 }
