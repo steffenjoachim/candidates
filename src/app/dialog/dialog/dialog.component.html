@@ -7,6 +7,9 @@
 
       <label for="password">Passwort:</label>
       <input id="password" [(ngModel)]="password" name="password" required type="password" />
+      <p class="password-rules" *ngIf="isRegisterMode()">
+        Das Passwort muss mindestens 6 Zeichen lang sein, eine Zahl, einen Groß- und einen Kleinbuchstaben enthalten.
+      </p>      
 
       <div class="button-group">
         <button type="submit">{{ isRegisterMode() ? 'Registrieren' : 'Anmelden' }}</button>
