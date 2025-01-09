@@ -49,12 +49,6 @@ button {
     text-align: center;
 }
 
-@media (min-width: 570px) { 
-    .card-container {
-        padding-top: 3.7rem;
-    } 
-}
-
 @media (min-width: 930px) { 
     .card-container {
         padding-top: 0;

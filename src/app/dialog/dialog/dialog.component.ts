@@ -50,6 +50,12 @@ export class DialogComponent {
   }
   
   async register(): Promise<void> {
+    const passwordError = this.validatePassword(this.password);
+    if (passwordError) {
+      this.errorMessage.set(passwordError); // Fehlermeldung setzen
+      return;
+    }
+
     try {
       await createUserWithEmailAndPassword(this.auth, this.email, this.password);
       await this.firebaseService.checkIfHasVoted(this.email);
@@ -69,6 +75,27 @@ export class DialogComponent {
       }
     }
   }
+
+  private validatePassword(password: string): string | null {
+    const minLength = 6;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+  
+    if (password.length < minLength) {
+      return `Das Passwort muss mindestens ${minLength} Zeichen lang sein.`;
+    }
+    if (!hasUpperCase) {
+      return 'Das Passwort muss mindestens einen Großbuchstaben enthalten.';
+    }
+    if (!hasLowerCase) {
+      return 'Das Passwort muss mindestens einen Kleinbuchstaben enthalten.';
+    }
+    if (!hasNumber) {
+      return 'Das Passwort muss mindestens eine Zahl enthalten.';
+    }
+    return null; // Validierung bestanden
+  }  
   
   onSubmit(): void {
     if (this.isRegisterMode()) {
