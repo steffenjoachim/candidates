@@ -1,35 +1,30 @@
 <main>
   <app-header></app-header>
   <article class="card-container">
-    
+
     <div class="card-wrapper">
       <!-- Loops through "candidates" and renders a card for each of them-->
-      <app-card *ngFor="let candidate of candidates" 
-              [id]="candidate.id" 
-              [name]="candidate.name" 
-              [img]="candidate.img"
-              [votes]="candidate.votes" 
-              [isLoggedIn]="isLoggedIn" 
-              (vote)="onVoteUpdated($event)">
+      <app-card *ngFor="let candidate of candidates" [id]="candidate.id" [name]="candidate.name" [img]="candidate.img"
+        [votes]="candidate.votes" [isLoggedIn]="isLoggedIn" (vote)="onVoteUpdated($event)">
       </app-card>
     </div>
-    
-    <p  *ngIf="!currentUser"
-        class="vote-message">Um  abzustimmen müssen Sie angemeldet / registriert sein (Anmelde-Button im Header!)</p>
+
+    <p *ngIf="!currentUser" class="font-bold text-center text-red-500">Um abzustimmen müssen Sie angemeldet /
+      registriert sein (Anmelde-Button im Header!)</p>
+
+
   </article>
 
   <!-- Popup for success message -->
-  <article *ngIf="showVotingSuccessPopup" 
-            class="popup">
+  <article *ngIf="showVotingSuccessPopup" class="popup">
     <div class="popup-content">
       <h2>Danke für Ihre Stimme für {{ votedCandidateName }}!</h2>
       <button (click)="closePopup('success')">Schließen</button>
     </div>
-  </article>  
+  </article>
 
   <!-- Popup for already voted message -->
-  <article *ngIf="showAlreadyVotedPopup" 
-           class="popup">
+  <article *ngIf="showAlreadyVotedPopup" class="popup">
     <div class="popup-content">
       <h2>Sie haben bereits für {{ votedCandidateName }} abgestimmt!</h2>
       <p>Möchten Sie Ihre Stimme ändern?</p>
@@ -37,7 +32,7 @@
       <button (click)="closePopup('alreadyVoted')">Nein, schließen</button>
     </div>
   </article>
-  
+
 
   <app-footer></app-footer>
 </main>

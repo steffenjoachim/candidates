@@ -1,4 +1,4 @@
-.card {
+/* .card {
     background: var(--clr-white-gray);
     padding: 1.5rem .5rem;
     display: flex;
@@ -49,4 +49,26 @@ img {
     .card {
         width: 225px;
     }
-}
+} */
+
+:root {
+    --clr-black: black;
+    --clr-lightgray: lightgray;
+    --clr-red: red;
+    --clr-white: white;
+    --clr-white-gray: rgb(249, 248, 251);
+    --clr-yellow: yellow;
+  }
+  
+  .bg-clr-white-gray {
+    background-color: var(--clr-white-gray);
+  }
+  
+  .shadow-clr-lightgray {
+    box-shadow: 3px 3px 5px 3px var(--clr-lightgray);
+  }
+  
+  .bg-clr-lightgray {
+    background-color: var(--clr-lightgray);
+  }
+  
