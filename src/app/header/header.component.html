@@ -3,7 +3,9 @@
     <p class="sub-title">Stimmen Sie für den von Ihnen bevorzugten Kandidaten ab!</p>
     <div class="btn-container">
       <!-- check if the user is logged in -->
-      <button (click)="onAuthButtonClick(currentUser)" *ngIf="!this.showLogout()">
+      <button (click)="onAuthButtonClick(currentUser)" 
+              *ngIf="!this.showLogout()"
+              class="bg-clr-black text-clr-white px-4 py-2 rounded hover:bg-clr-lightgray">
         {{ currentUser ? 'Abmelden' : 'Anmelden' }}
       </button>
     </div>
