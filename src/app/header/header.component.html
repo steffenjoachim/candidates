@@ -1,21 +1,31 @@
-<header>
-    <h1>Wahl Umfrage</h1>
-    <p class="sub-title">Stimmen Sie für den von Ihnen bevorzugten Kandidaten ab!</p>
-    <div class="btn-container">
-      <!-- check if the user is logged in -->
-      <button (click)="onAuthButtonClick(currentUser)" 
-              *ngIf="!this.showLogout()"
-              class="bg-clr-black text-clr-white px-4 py-2 rounded hover:bg-clr-lightgray">
-        {{ currentUser ? 'Abmelden' : 'Anmelden' }}
-      </button>
-    </div>
-  </header>
-  
-  <!-- dialog-component -->
-  <article *ngIf="showLogin()" class="dialog-container">
-    <app-dialog 
-      (loginEvent)="onLogin($event)" 
-      (closeDialog)="showLogin.set(false)">
-    </app-dialog>
-  </article>
-  
+<header class="bg-gradient-to-b from-black via-red-500 to-yellow-400 text-center py-6">
+  <h1 
+    class="text-5xl font-extrabold py-4" 
+    style="
+      background-image: linear-gradient(180deg, #FF0000, #FFFF00); 
+      background-clip: text; 
+      -webkit-background-clip: text; 
+      color: transparent;">
+    Wahl Umfrage
+  </h1>
+  <p class="sub-title text-yellow-400 font-bold text-xl my-4">
+    Stimmen Sie für den von Ihnen bevorzugten Kandidaten ab!
+  </p>
+  <div class="btn-container flex justify-center">
+    <button 
+      (click)="onAuthButtonClick(currentUser)" 
+      *ngIf="!this.showLogout()" 
+      class="bg-black text-white px-6 py-2 rounded font-semibold hover:bg-gray-600 transition">
+      {{ currentUser ? 'Abmelden' : 'Anmelden' }}
+    </button>
+  </div>
+</header>
+
+<!-- dialog-component -->
+<article *ngIf="showLogin()" class="dialog-container fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+  <app-dialog 
+    (loginEvent)="onLogin($event)" 
+    (closeDialog)="showLogin.set(false)"
+    class="bg-white p-6 rounded-lg shadow-lg min-w-[300px]">
+  </app-dialog>
+</article>
