@@ -1,33 +1,94 @@
-<div class="dialog-backdrop">
-  <div class="dialog">
-    <h2>{{ isRegisterMode() ? 'Registrieren' : 'Anmelden' }}</h2>
-    <form (ngSubmit)="onSubmit()">
-      <label for="email">E-Mail:</label>
-      <input id="email" [(ngModel)]="email" name="email" required type="email" />
+<div 
+  class="dialog-backdrop fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex items-center justify-center z-10"
+>
+  <div 
+    class="dialog bg-white p-6 rounded-lg w-[400px] max-w-[90%] relative"
+  >
+    <h2 class="text-lg font-bold text-center mb-4">
+      {{ isRegisterMode() ? 'Registrieren' : 'Anmelden' }}
+    </h2>
+    <form class="flex flex-col" (ngSubmit)="onSubmit()">
+      <label for="email" class="mt-4 text-sm font-medium">E-Mail:</label>
+      <input 
+        id="email" 
+        [(ngModel)]="email" 
+        name="email" 
+        type="email" 
+        required 
+        class="mt-2 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
 
-      <label for="password">Passwort:</label>
-      <input id="password" [(ngModel)]="password" name="password" required type="password" />
-      <p class="password-rules" *ngIf="isRegisterMode()">
+      <label for="password" class="mt-4 text-sm font-medium">Passwort:</label>
+      <input 
+        id="password" 
+        [(ngModel)]="password" 
+        name="password" 
+        type="password" 
+        required 
+        class="mt-2 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
+      />
+
+      <p 
+        class="password-rules text-xs text-gray-600 mt-2" 
+        *ngIf="isRegisterMode()"
+      >
         Das Passwort muss mindestens 6 Zeichen lang sein, eine Zahl, einen Groß- und einen Kleinbuchstaben enthalten.
       </p>      
 
-      <div class="button-group">
-        <button class="bg-indigo-500" type="submit">{{ isRegisterMode() ? 'Registrieren' : 'Anmelden' }}</button>
-        <button *ngIf="!isRegisterMode()" type="button" (click)="toggleMode()">Zum Registrieren</button>
+      <div class="button-group flex justify-between mt-6">
+        <button 
+          class="bg-indigo-500 text-white font-bold py-2 px-4 rounded hover:bg-indigo-600 transition duration-150 border-none"
+          type="submit"
+        >
+          {{ isRegisterMode() ? 'Registrieren' : 'Anmelden' }}
+        </button>
+        <button 
+          *ngIf="!isRegisterMode()" 
+          type="button" 
+          (click)="toggleMode()" 
+          class="bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded hover:bg-gray-400 transition duration-150 border-none"
+        >
+          Zum Registrieren
+        </button>
       </div>
     </form>
-    <button class="close" (click)="close()">Schließen</button>
+    <button 
+      class="close absolute top-2 right-2 bg-red-500 text-white text-xl font-bold py-1 px-3 rounded hover:bg-red-600 cursor-pointer transition duration-150 border-none"
+      (click)="close()"
+    >
+      ×
+    </button>
   </div>
 </div>
 
 <!-- Popup for successful registration -->
-<div class="popup" *ngIf="showSuccessMessage()">
-  <p>Registrierung erfolgreich! Bitte melden Sie sich an.</p>
-  <p class="ok" (click)="closePopup()">OK</p>
+<div 
+  class="popup fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-20 text-center flex flex-col items-center justify-center"
+  *ngIf="showSuccessMessage()"
+>
+  <p class="text-base font-medium mb-4">
+    Registrierung erfolgreich! Bitte melden Sie sich an.
+  </p>
+  <p 
+    class="ok bg-gray-300 text-gray-700 font-bold w-1/6 py-1 px-3 rounded hover:bg-gray-400 cursor-pointer transition duration-150 border-none center"
+    (click)="closePopup()"
+  >
+    OK
+  </p>
 </div>
 
 <!-- Popup for error messages -->
-<div class="popup" *ngIf="errorMessage()">
-  <p class="error">{{ errorMessage() }}</p>
-  <p class="ok" (click)="closePopup()">OK</p>
+<div 
+  class="popup fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-20 flex flex-col items-center justify-center"
+  *ngIf="errorMessage()"
+>
+  <p class="error text-red-500 text-base font-medium mb-4">
+    {{ errorMessage() }}
+  </p>
+  <p 
+    class="ok bg-gray-300 text-gray-700 w-1/6 font-bold py-2 px-2 rounded cursor-pointer transition duration-150 text-center border-none"
+    (click)="closePopup()"
+  >
+    OK
+  </p>
 </div>

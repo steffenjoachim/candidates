@@ -1,16 +1,27 @@
-<div class="imprint-container">
+<div class="imprint-container flex flex-col h-screen bg-gray-50">
     <app-header2></app-header2>
-    <main><h1>Impressum</h1>
-        <p>Steffen Schanze<br />
-        Pfinzstra&szlig;e, 16<br />
-        76227 Karlsruhe</p>
-        
-        <h2>Kontakt:</h2>
-        <p>Telefon: 017634394501<br />
-            E-Mail: steffenjoachim.schanze&#64;gmail.com
+    <main class="flex-1 flex flex-col items-center justify-center px-6 py-8 text-gray-800">
+        <h1 class="text-3xl font-bold mb-4 text-gray-900">Impressum</h1>
+        <p class="text-center mb-8">
+            Steffen Schanze<br />
+            Pfinzstraße 16<br />
+            76227 Karlsruhe
         </p>
         
-        <p class="source">Quelle: <a href="https://www.e-recht24.de/impressum-generator.html">https://www.e-recht24.de/impressum-generator.html</a></p>
+        <h2 class="text-2xl font-semibold mb-4 text-gray-900">Kontakt:</h2>
+        <p class="text-center">
+            Telefon: 
+            <a href="tel:017634394501" class="text-blue-500 hover:underline">0176 3439 4501</a><br />
+            E-Mail: 
+            <a href="mailto:steffenjoachim.schanze@gmail.com" class="text-blue-500 hover:underline">steffenjoachim.schanze&#64;.com</a>
+        </p>
+        
+        <p class="source mt-8 text-sm text-gray-500">
+            Quelle: 
+            <a href="https://www.e-recht24.de/impressum-generator.html" class="text-blue-500 hover:underline">
+                https://www.e-recht24.de/impressum-generator.html
+            </a>
+        </p>
     </main>
     <app-footer></app-footer>
 </div>
