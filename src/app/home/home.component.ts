@@ -61,7 +61,7 @@ export class HomeComponent implements OnInit {
         if (votedFor) {
           this.votedCandidateName = votedFor; // sets the candidate's name
           this.votedCandidateId = id; // saves the ID of the new candidate
-          this.showAlreadyVotedPopup = true; // shows the "Already Voted" popup
+          this.showAlreadyVotedPopup = true; 
           return; 
         }
 
@@ -95,8 +95,8 @@ export class HomeComponent implements OnInit {
           await this.updateVote(this.votedCandidateId, newCandidate.votes + 1, email);
   
           // popup controle
-          this.showAlreadyVotedPopup = false; // closes the "Already Voted" popup
-          this.showVotingSuccessPopup = true; // shows the "Success"-popup
+          this.showAlreadyVotedPopup = false; 
+          this.showVotingSuccessPopup = true; 
         }
       } catch (error) {
         console.error('Fehler beim Wechsel der Stimme:', error);
@@ -126,7 +126,6 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  // closes popups
   closePopup(popupType: 'success' | 'alreadyVoted'): void {
     if (popupType === 'success') {
       this.showVotingSuccessPopup = false;

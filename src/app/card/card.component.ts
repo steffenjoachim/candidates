@@ -7,10 +7,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 })
 export class CardComponent {
   @Input() id: string = ''; 
-  @Input() name: string = ''; 
+  @Input() name: string = ''; //candidate name
   @Input() img: string = ''; 
   @Input() votes!: number;
-  @Input() isLoggedIn = false; // Neue Eingabe für den Anmeldestatus
+  @Input() isLoggedIn = false; 
   @Output() vote = new EventEmitter<{ id: string; newVotes: number }>();
 
   incrementVotes(): void {

@@ -18,4 +18,4 @@ A web application that allows users to vote for candidates. The app ensures that
 
 - **Frontend**: This project was generated using Angular version 19.0.5.
 - **Backend**: Firebase Firestore for database and authentication
-- **Styling**: CSS for custom styles
+- **Styling**: Tailwindcss and CSS for custom styles
