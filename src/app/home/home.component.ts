@@ -5,13 +5,7 @@ import { CardComponent } from '../card/card.component';
 import { FooterComponent } from '../footer/footer.component';
 import { FirebaseService } from '../services/firebase.service';
 import { AuthService } from '../services/auth.service';
-
-interface Candidate {
-  id: string;
-  name: string;
-  img: string;
-  votes: number;
-}
+import { Candidate } from '../interfaces/voting.interface';
 
 @Component({
   selector: 'app-home',

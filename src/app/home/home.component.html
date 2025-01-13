@@ -6,10 +6,7 @@
       <!-- Loops through "candidates" and renders a card for each of them-->
       <app-card
         *ngFor="let candidate of candidates"
-        [id]="candidate.id"
-        [name]="candidate.name"
-        [img]="candidate.img"
-        [votes]="candidate.votes"
+        [candidate]="candidate"
         [isLoggedIn]="isLoggedIn"
         (vote)="onVoteUpdated($event)"
       ></app-card>
