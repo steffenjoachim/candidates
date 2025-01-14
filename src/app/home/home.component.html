@@ -4,28 +4,28 @@
   <article class="flex flex-col flex-1 justify-center pb-4">
     <div class="flex flex-wrap gap-4 justify-center mt-4">
       <!-- Loops through "candidates" and renders a card for each of them-->
-      <app-card
-        *ngFor="let candidate of candidates"
-        [candidate]="candidate"
-        [isLoggedIn]="isLoggedIn"
-        (vote)="onVoteUpdated($event)"
-      ></app-card>
+       @for (candidate of candidates; track candidate.id) {
+        <app-card
+          [candidate]="candidate"
+          [isLoggedIn]="isLoggedIn"
+          (vote)="onVoteUpdated($event)"
+        ></app-card>
+       }
     </div>
 
-    <p
-      *ngIf="!currentUser"
-      class="font-bold text-center text-red-500 mt-4"
-    >
-      Um abzustimmen müssen Sie angemeldet / registriert sein
-      (Anmelde-Button im Header!)
-    </p>
+    <!-- Shows a message if the user is not logged in -->
+     @if (!currentUser) {
+      <p class="font-bold text-center text-red-500 mt-4">
+        Um abzustimmen müssen Sie angemeldet / registriert sein
+        (Anmelde-Button im Header!)
+      </p>
+     }
+    
   </article>
 
   <!-- Popup for success message -->
-  <article
-    *ngIf="showVotingSuccessPopup"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20"
-  >
+   @if (showVotingSuccessPopup()) {
+    <article class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20">
     <div class="bg-white p-6 rounded-lg shadow-lg text-center max-w-md mx-auto">
       <h2 class="text-lg font-bold mb-4">
         Danke für Ihre Stimme für {{ votedCandidateName }}!
@@ -38,33 +38,34 @@
       </button>
     </div>
   </article>
+   }
+  
 
   <!-- Popup for already voted message -->
-  <article
-    *ngIf="showAlreadyVotedPopup"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20"
-  >
-    <div class="bg-white p-6 rounded-lg shadow-lg text-center max-w-md mx-auto">
-      <h2 class="text-lg font-bold mb-2">
-        Sie haben bereits für {{ votedCandidateName }} abgestimmt!
-      </h2>
-      <p class="mb-4">Möchten Sie Ihre Stimme ändern?</p>
-      <div class="flex gap-2 justify-center">
-        <button
-          class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition border-none"
-          (click)="changeVote()"
-        >
-          Ja, ich möchte wechseln
-        </button>
-        <button
-          class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition border-none"
-          (click)="closePopup('alreadyVoted')"
-        >
-          Nein, schließen
-        </button>
+   @if (showAlreadyVotedPopup()) {
+    <article class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20">
+      <div class="bg-white p-6 rounded-lg shadow-lg text-center max-w-md mx-auto">
+        <h2 class="text-lg font-bold mb-2">
+          Sie haben bereits für {{ votedCandidateName }} abgestimmt!
+        </h2>
+        <p class="mb-4">Möchten Sie Ihre Stimme ändern?</p>
+        <div class="flex gap-2 justify-center">
+          <button
+            class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 transition border-none"
+            (click)="changeVote()"
+          >
+            Ja, ich möchte wechseln
+          </button>
+          <button
+            class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition border-none"
+            (click)="closePopup('alreadyVoted')"
+          >
+            Nein, schließen
+          </button>
+        </div>
       </div>
-    </div>
-  </article>
+    </article>
+   }
 
   <app-footer></app-footer>
 </main>

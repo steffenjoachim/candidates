@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
 import { CardComponent } from '../card/card.component';
@@ -12,15 +12,18 @@ import { Candidate } from '../interfaces/voting.interface';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent, CardComponent],
+  imports: [CommonModule, 
+            HeaderComponent, 
+            FooterComponent, 
+            CardComponent],
 })
 
 export class HomeComponent implements OnInit {
   candidates: Candidate[] = [];
   isLoggedIn = false;
 
-  showVotingSuccessPopup = false; 
-  showAlreadyVotedPopup = false; 
+  showVotingSuccessPopup = signal(false); ; 
+  showAlreadyVotedPopup = signal(false); 
   votedCandidateName = ''; // candidate name for popups
   votedCandidateId = ''; // id of candidate for changing vote 
   currentUser: any;
@@ -55,7 +58,7 @@ export class HomeComponent implements OnInit {
         if (votedFor) {
           this.votedCandidateName = votedFor; // sets the candidate's name
           this.votedCandidateId = id; // saves the ID of the new candidate
-          this.showAlreadyVotedPopup = true; 
+          this.showAlreadyVotedPopup.set(true); // shows the popup
           return; 
         }
 
@@ -89,8 +92,8 @@ export class HomeComponent implements OnInit {
           await this.updateVote(this.votedCandidateId, newCandidate.votes + 1, email);
   
           // popup controle
-          this.showAlreadyVotedPopup = false; 
-          this.showVotingSuccessPopup = true; 
+          this.showAlreadyVotedPopup.set(false);   
+          this.showVotingSuccessPopup.set(true); 
         }
       } catch (error) {
         console.error('Fehler beim Wechsel der Stimme:', error);
@@ -113,7 +116,7 @@ export class HomeComponent implements OnInit {
 
         // prepare success-popup 
         this.votedCandidateName = candidate.name;
-        this.showVotingSuccessPopup = true;
+        this.showVotingSuccessPopup.set(true);
       }
     } catch (error) {
       console.error('Fehler beim Aktualisieren der Stimme:', error);
@@ -122,9 +125,9 @@ export class HomeComponent implements OnInit {
 
   closePopup(popupType: 'success' | 'alreadyVoted'): void {
     if (popupType === 'success') {
-      this.showVotingSuccessPopup = false;
+      this.showVotingSuccessPopup.set(false);
     } else if (popupType === 'alreadyVoted') {
-      this.showAlreadyVotedPopup = false;
+      this.showAlreadyVotedPopup.set(false);
     }
   }  
 
