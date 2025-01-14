@@ -12,18 +12,19 @@
     Stimmen Sie für den von Ihnen bevorzugten Kandidaten ab!
   </p>
   <div class="btn-container flex justify-center">
-    <button 
+    @if(!this.showLogout()) {
+      <button 
       (click)="onAuthButtonClick(currentUser)" 
-      *ngIf="!this.showLogout()" 
       class="bg-black text-white px-6 py-2 rounded font-semibold hover:bg-gray-600 transition">
       {{ currentUser ? 'Abmelden' : 'Anmelden' }}
     </button>
+    }
   </div>
 </header>
 
 <!-- dialog-component -->
  @if (showLogin()) {
-<article *ngIf="showLogin()" class="dialog-container fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+<article class="dialog-container fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
   <app-dialog 
     (loginEvent)="onLogin($event)" 
     (closeDialog)="showLogin.set(false)"
