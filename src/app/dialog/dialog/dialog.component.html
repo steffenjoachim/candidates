@@ -27,13 +27,12 @@
         required 
         class="mt-2 p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
       />
-
-      <p 
-        class="password-rules text-xs text-gray-600 mt-2" 
-        *ngIf="isRegisterMode()"
-      >
+      @if (isRegisterMode()) {
+        <p class="password-rules text-xs text-gray-600 mt-2">
         Das Passwort muss mindestens 6 Zeichen lang sein, eine Zahl, einen Groß- und einen Kleinbuchstaben enthalten.
       </p>      
+      }
+      
 
       <div class="button-group flex justify-between mt-6">
         <button 
@@ -42,14 +41,16 @@
         >
           {{ isRegisterMode() ? 'Registrieren' : 'Anmelden' }}
         </button>
-        <button 
-          *ngIf="!isRegisterMode()" 
+        @if (!isRegisterMode()) {
+          <button 
           type="button" 
           (click)="toggleMode()" 
           class="bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded hover:bg-gray-400 transition duration-150 border-none"
         >
           Zum Registrieren
         </button>
+        }
+        
       </div>
     </form>
     <button 
@@ -62,10 +63,9 @@
 </div>
 
 <!-- Popup for successful registration -->
-<div 
-  class="popup fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-20 text-center flex flex-col items-center justify-center"
-  *ngIf="showSuccessMessage()"
->
+ @if(showSuccessMessage()) {
+  <div 
+  class="popup fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-20 text-center flex flex-col items-center justify-center">
   <p class="text-base font-medium mb-4">
     Registrierung erfolgreich! Bitte melden Sie sich an.
   </p>
@@ -76,12 +76,13 @@
     OK
   </p>
 </div>
+ }
+
 
 <!-- Popup for error messages -->
-<div 
-  class="popup fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-20 flex flex-col items-center justify-center"
-  *ngIf="errorMessage()"
->
+ @if (errorMessage()) {
+  <div 
+  class="popup fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg z-20 flex flex-col items-center justify-center">
   <p class="error text-red-500 text-base font-medium mb-4">
     {{ errorMessage() }}
   </p>
@@ -92,3 +93,5 @@
     OK
   </p>
 </div>
+ }
+

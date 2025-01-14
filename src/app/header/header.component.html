@@ -22,6 +22,7 @@
 </header>
 
 <!-- dialog-component -->
+ @if (showLogin()) {
 <article *ngIf="showLogin()" class="dialog-container fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
   <app-dialog 
     (loginEvent)="onLogin($event)" 
@@ -29,3 +30,4 @@
     class="bg-white p-6 rounded-lg shadow-lg min-w-[300px]">
   </app-dialog>
 </article>
+ }
