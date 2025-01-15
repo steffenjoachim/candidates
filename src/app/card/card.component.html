@@ -1,19 +1,18 @@
 <section 
 class="card bg-clr-white-gray p-6 flex flex-col items-center rounded-xl w-[170px] shadow-md shadow-clr-lightgray md:w-[180px] lg:w-[200px] xl:w-[225px]" 
-[id]="candidate.id" 
+[id]="candidate().id" 
 >
-<h2 class="text-lg font-bold">{{ candidate.name }}</h2>
+<h2 class="text-lg font-bold">{{ candidate().name }}</h2>
 <img 
-  [src]="candidate.img" 
-  alt="{{ candidate.name }}" 
+  [src]="candidate().img" 
+  alt="{{ candidate().name }}" 
   class="mt-4 h-16 w-16 rounded-full object-cover object-[50%_20%]"
 >
-<h3 class="mt-4 text-base font-bold">{{ candidate.votes }}</h3>
+<h3 class="mt-4 text-base font-bold">{{ candidate().votes }}</h3>
 <button 
   class="vote-btn mt-4 bg-clr-lightgray font-bold py-2 px-6 rounded-md border-none hover:bg-gray-200 disabled:opacity-50" 
-  (click)="incrementVotes()" 
-  [disabled]="!isLoggedIn" 
-  [title]="!isLoggedIn ? 'Bitte melden Sie sich an, um abzustimmen' : ''"
+  [disabled]="!isLoggedIn()" 
+  [title]="!isLoggedIn() ? 'Bitte melden Sie sich an, um abzustimmen' : ''"
 >
   Wählen!
 </button>
