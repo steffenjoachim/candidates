@@ -3,10 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {Auth,createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { FirebaseService } from '../../services/firebase.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-dialog',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, 
+            FormsModule],
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.css'],
 })
@@ -25,7 +27,8 @@ export class DialogComponent {
   }>();
 
   constructor(private auth: Auth,
-              private firebaseService: FirebaseService
+              private firebaseService: FirebaseService,
+              private authService: AuthService
   ) {}
 
   open(isRegisterMode: boolean = false): void {
@@ -44,15 +47,24 @@ export class DialogComponent {
     this.isRegisterMode.update(value => !value);
   }  
 
-  login(): void {
-    const credentials = { email: this.email, password: this.password };
-    this.loginEvent.emit(credentials); 
-  }
+  async login(): Promise<void> {
+    if (!this.email || !this.password) {
+      this.errorMessage.set('Bitte Login-Daten eingeben.');
+      return;
+    }
+    try {
+      // Logic for login ( uses Firebase Auth-Service)
+      const userCredential = await this.authService.login(this.email, this.password);
+      this.errorMessage.set(null); // reset error message
+    } catch (error: any) {
+        this.errorMessage.set('Email und/oder Passwort ist falsch. Bitte prüfen!');
+    }
+  }  
   
   async register(): Promise<void> {
     const passwordError = this.validatePassword(this.password);
     if (passwordError) {
-      this.errorMessage.set(passwordError); // Fehlermeldung setzen
+      this.errorMessage.set(passwordError); 
       return;
     }
 
