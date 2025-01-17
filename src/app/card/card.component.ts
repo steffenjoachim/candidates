@@ -7,8 +7,19 @@ import { Candidate } from '../interfaces/voting.interface';
   styleUrls: ['./card.component.css']
 })
 export class CardComponent {
-  candidate = input<Candidate>({ id: '', name: '', img: '', votes: 0 });
+  candidate = input<Candidate | undefined>();
   isLoggedIn = input<boolean>(false);
 
   @Output() vote = new EventEmitter<{ id: string; newVotes: number }>();
+
+  incrementVotes(): void {
+    if (this.isLoggedIn()) {
+      const candidate = this.candidate(); 
+      if (candidate) {
+        const newVotes = candidate.votes + 1;
+        this.vote.emit({ id: candidate.id, newVotes });
+      }
+    }
+  }
+  
 }

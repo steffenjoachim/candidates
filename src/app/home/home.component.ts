@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
 
   showVotingSuccessPopup = signal(false); ; 
   showAlreadyVotedPopup = signal(false); 
+  showDoubleVotedPopup = signal(false);
   votedCandidateName = ''; // candidate name for popups
   votedCandidateId = ''; // id of candidate for changing vote 
   currentUser: any;
@@ -48,14 +49,21 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  async onVoteUpdated({ id, newVotes }: { id: string; newVotes: number }): Promise<void> {
+  async onVoteUpdated({ id, newVotes }: { id: string; newVotes: number }, candidate: Candidate): Promise<void> {
+    console.log(candidate)
     if (this.currentUser && this.currentUser.email) {
       const email = this.currentUser.email;
-
       try {
         // checks if a user has already voted
         const votedFor = await this.firebaseService.checkIfHasVoted(email);
         if (votedFor) {
+
+          if (votedFor === candidate.name) {
+           console.log('User hat bereits für diesen Kandidaten gestimmt');
+            this.showDoubleVotedPopup.set(true);
+            return;
+          }
+          
           this.votedCandidateName = votedFor; // sets the candidate's name
           this.votedCandidateId = id; // saves the ID of the new candidate
           this.showAlreadyVotedPopup.set(true); // shows the popup
@@ -93,6 +101,7 @@ export class HomeComponent implements OnInit {
   
           // popup controle
           this.showAlreadyVotedPopup.set(false);   
+          this.showDoubleVotedPopup.set(false);
           this.showVotingSuccessPopup.set(true); 
         }
       } catch (error) {
@@ -123,12 +132,14 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  closePopup(popupType: 'success' | 'alreadyVoted'): void {
+  closePopup(popupType: 'success' | 'alreadyVoted' | 'doubleVoted'): void {
     if (popupType === 'success') {
       this.showVotingSuccessPopup.set(false);
     } else if (popupType === 'alreadyVoted') {
       this.showAlreadyVotedPopup.set(false);
-    }
+    } else if (popupType === 'doubleVoted') {
+      this.showDoubleVotedPopup.set(false);
+    } 
   }  
 
 }

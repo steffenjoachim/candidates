@@ -55,7 +55,8 @@ export class DialogComponent {
     try {
       // Logic for login ( uses Firebase Auth-Service)
       const userCredential = await this.authService.login(this.email, this.password);
-      this.errorMessage.set(null); // reset error message
+      this.errorMessage.set(null); 
+      this.close()
     } catch (error: any) {
         this.errorMessage.set('Email und/oder Passwort ist falsch. Bitte prüfen!');
     }
