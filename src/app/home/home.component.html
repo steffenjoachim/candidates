@@ -3,9 +3,9 @@
 
   <article class="flex flex-col flex-1 justify-center pb-4">
     <div class="flex flex-wrap gap-4 justify-center mt-4">
-      <!-- Loops through "candidates" and renders a card for each of them-->
+      <!-- Loops through "candidates" and renders a chancellor-candidate-card for each of them-->
       @for (candidate of candidates; track candidate.id) {
-      <app-card [candidate]="candidate" [isLoggedIn]="isLoggedIn" (vote)="onVoteUpdated($event, candidate)"></app-card>
+      <app-chancellor-candidate-card [candidate]="candidate" [isLoggedIn]="isLoggedIn" (vote)="onVoteUpdated($event, candidate)"></app-chancellor-candidate-card>
       }
     </div>
 

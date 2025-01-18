@@ -1,18 +1,16 @@
-import { Component, EventEmitter, Output, signal } from '@angular/core'; 
+import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {Auth,createUserWithEmailAndPassword } from '@angular/fire/auth';
+import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 import { FirebaseService } from '../../services/firebase.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-dialog',
-  imports: [CommonModule, 
-            FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.css'],
 })
-
 export class DialogComponent {
   email: string = '';
   password: string = '';
@@ -20,32 +18,32 @@ export class DialogComponent {
   showSuccessMessage = signal(false);
   errorMessage = signal<string | null>(null);
 
-
   @Output() loginEvent = new EventEmitter<{
     email: string;
     password: string;
   }>();
 
-  constructor(private auth: Auth,
-              private firebaseService: FirebaseService,
-              private authService: AuthService
+  constructor(
+    private auth: Auth,
+    private firebaseService: FirebaseService,
+    private authService: AuthService,
   ) {}
 
   open(isRegisterMode: boolean = false): void {
     this.isRegisterMode.set(isRegisterMode);
-    this.email = ''; 
+    this.email = '';
     this.password = '';
   }
 
   close(): void {
-    this.email = ''; 
+    this.email = '';
     this.password = '';
     this.loginEvent.emit(undefined);
   }
 
   toggleMode(): void {
-    this.isRegisterMode.update(value => !value);
-  }  
+    this.isRegisterMode.update((value) => !value);
+  }
 
   async login(): Promise<void> {
     if (!this.email || !this.password) {
@@ -54,25 +52,34 @@ export class DialogComponent {
     }
     try {
       // Logic for login ( uses Firebase Auth-Service)
-      const userCredential = await this.authService.login(this.email, this.password);
-      this.errorMessage.set(null); 
-      this.close()
+      const userCredential = await this.authService.login(
+        this.email,
+        this.password,
+      );
+      this.errorMessage.set(null);
+      this.close();
     } catch (error: any) {
-        this.errorMessage.set('Email und/oder Passwort ist falsch. Bitte prüfen!');
+      this.errorMessage.set(
+        'Email und/oder Passwort ist falsch. Bitte prüfen!',
+      );
     }
-  }  
-  
+  }
+
   async register(): Promise<void> {
     const passwordError = this.validatePassword(this.password);
     if (passwordError) {
-      this.errorMessage.set(passwordError); 
+      this.errorMessage.set(passwordError);
       return;
     }
 
     try {
-      await createUserWithEmailAndPassword(this.auth, this.email, this.password);
+      await createUserWithEmailAndPassword(
+        this.auth,
+        this.email,
+        this.password,
+      );
       await this.firebaseService.checkIfHasVoted(this.email);
-  
+
       this.showSuccessMessage.set(true); // shows success message
       await this.auth.signOut(); // user is logged out after registration
     } catch (error: any) {
@@ -81,9 +88,13 @@ export class DialogComponent {
       } else if (error.code === 'auth/invalid-email') {
         this.errorMessage.set('Die eingegebene E-Mail-Adresse ist ungültig.');
       } else if (error.code === 'auth/weak-password') {
-        this.errorMessage.set('Das Passwort ist zu schwach. Bitte verwenden Sie ein stärkeres Passwort.');
+        this.errorMessage.set(
+          'Das Passwort ist zu schwach. Bitte verwenden Sie ein stärkeres Passwort.',
+        );
       } else {
-        this.errorMessage.set('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
+        this.errorMessage.set(
+          'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.',
+        );
         console.error('Fehler bei der Registrierung:', error);
       }
     }
@@ -94,7 +105,7 @@ export class DialogComponent {
     const hasUpperCase = /[A-Z]/.test(password);
     const hasLowerCase = /[a-z]/.test(password);
     const hasNumber = /\d/.test(password);
-  
+
     if (password.length < minLength) {
       return `Das Passwort muss mindestens ${minLength} Zeichen lang sein.`;
     }
@@ -108,18 +119,18 @@ export class DialogComponent {
       return 'Das Passwort muss mindestens eine Zahl enthalten.';
     }
     return null; // Validierung bestanden
-  }  
-  
+  }
+
   onSubmit(): void {
     if (this.isRegisterMode()) {
       this.register();
     } else {
       this.login();
     }
-  }  
+  }
 
   closePopup(): void {
-    this.showSuccessMessage.set(false); 
+    this.showSuccessMessage.set(false);
     this.isRegisterMode.set(false);
     this.errorMessage.set(null);
   }
