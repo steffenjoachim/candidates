@@ -5,7 +5,7 @@ import {
   Firestore,
   collection,
   collectionData,
-  
+
   updateDoc,
   doc,
   query,
@@ -18,7 +18,8 @@ import {
   from
 } from 'rxjs';
 
-import { Candidate, UserVote } from '../interfaces/voting.interface';
+import { Candidate } from '../interfaces/candidate.interface';
+import { UserVote } from '../interfaces/user-vote.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -75,7 +76,7 @@ export class FirebaseService {
     const usersCollection = collection(this.firestore, this.collectionUsers);
     const userQuery = query(usersCollection, where('email', '==', email));
     const userSnapshot = await getDocs(userQuery);
-  
+
     if (!userSnapshot.empty) {
       const userDocRef = userSnapshot.docs[0].ref;
       await updateDoc(userDocRef, { votedFor: '' }); // resets the vote

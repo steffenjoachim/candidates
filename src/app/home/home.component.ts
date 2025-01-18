@@ -1,32 +1,32 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../header/header.component';
-import { CardComponent } from '../card/card.component';
+import { ChancellorCandidateCardComponent } from '../chancellor-candidate-card/chancellor-candidate.card.component';
 import { FooterComponent } from '../footer/footer.component';
 import { FirebaseService } from '../services/firebase.service';
 import { AuthService } from '../services/auth.service';
-import { Candidate } from '../interfaces/voting.interface';
+import { Candidate } from '../interfaces/candidate.interface';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: [CommonModule, 
-            HeaderComponent, 
-            FooterComponent, 
-            CardComponent],
+  imports: [CommonModule,
+            HeaderComponent,
+            FooterComponent,
+            ChancellorCandidateCardComponent],
 })
 
 export class HomeComponent implements OnInit {
   candidates: Candidate[] = [];
   isLoggedIn = false;
 
-  showVotingSuccessPopup = signal(false); ; 
-  showAlreadyVotedPopup = signal(false); 
+  showVotingSuccessPopup = signal(false); ;
+  showAlreadyVotedPopup = signal(false);
   showDoubleVotedPopup = signal(false);
   votedCandidateName = ''; // candidate name for popups
-  votedCandidateId = ''; // id of candidate for changing vote 
+  votedCandidateId = ''; // id of candidate for changing vote
   currentUser: any;
 
   constructor(
@@ -63,11 +63,11 @@ export class HomeComponent implements OnInit {
             this.showDoubleVotedPopup.set(true);
             return;
           }
-          
+
           this.votedCandidateName = votedFor; // sets the candidate's name
           this.votedCandidateId = id; // saves the ID of the new candidate
           this.showAlreadyVotedPopup.set(true); // shows the popup
-          return; 
+          return;
         }
 
         // updates votes if the user has not voted yet
@@ -75,40 +75,40 @@ export class HomeComponent implements OnInit {
       } catch (error) {
         console.error('Fehler beim Abstimmungsprozess:', error);
       }
-    } 
+    }
   }
 
   async changeVote(): Promise<void> {
     if (this.currentUser && this.currentUser.email) {
       const email = this.currentUser.email;
-  
+
       try {
         // finds the old candidate for whom the vote has been cast so far
         const oldCandidate = this.candidates.find(
           (c) => c.name === this.votedCandidateName
         );
-  
+
         if (oldCandidate) {
           // reduces the old candidate's vote
           await this.firebaseService.updateVotes(oldCandidate.id, oldCandidate.votes - 1);
-          oldCandidate.votes -= 1; 
+          oldCandidate.votes -= 1;
         }
-  
+
         // adds new candidate's vote
         const newCandidate = this.candidates.find((c) => c.id === this.votedCandidateId);
         if (newCandidate) {
           await this.updateVote(this.votedCandidateId, newCandidate.votes + 1, email);
-  
+
           // popup controle
-          this.showAlreadyVotedPopup.set(false);   
+          this.showAlreadyVotedPopup.set(false);
           this.showDoubleVotedPopup.set(false);
-          this.showVotingSuccessPopup.set(true); 
+          this.showVotingSuccessPopup.set(true);
         }
       } catch (error) {
         console.error('Fehler beim Wechsel der Stimme:', error);
       }
     }
-  }  
+  }
 
   async updateVote(candidateId: string, newVotes: number, email: string): Promise<void> {
     try {
@@ -123,7 +123,7 @@ export class HomeComponent implements OnInit {
        //updates candidates list
         candidate.votes = newVotes;
 
-        // prepare success-popup 
+        // prepare success-popup
         this.votedCandidateName = candidate.name;
         this.showVotingSuccessPopup.set(true);
       }
@@ -139,7 +139,7 @@ export class HomeComponent implements OnInit {
       this.showAlreadyVotedPopup.set(false);
     } else if (popupType === 'doubleVoted') {
       this.showDoubleVotedPopup.set(false);
-    } 
-  }  
+    }
+  }
 
 }
