@@ -51,7 +51,7 @@ export class DialogComponent {
       return;
     }
     try {
-      // Logic for login ( uses Firebase Auth-Service)
+      // logic for login ( uses Firebase Auth-Service)
       const userCredential = await this.authService.login(
         this.email,
         this.password,
