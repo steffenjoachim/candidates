@@ -1,16 +1,16 @@
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { Observable } from 'rxjs';
 import { User } from 'firebase/auth';
-import { DialogComponent } from '../dialog/dialog/dialog.component';
+import { DialogComponent } from '../../dialog/dialog/dialog.component';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
-  imports: [CommonModule, DialogComponent]
+  imports: [CommonModule, DialogComponent],
 })
 export class HeaderComponent implements OnInit {
   user$: Observable<User | null>;
@@ -31,18 +31,20 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-// opens the dialog component
-onAuthButtonClick(user: User | null): void {
-  if (user) {
-    this.logout();
-  } else {
-    //ensures that app dialog becomes visible
-    this.showLogin.set(true);
-    this.showLogout.set(true);
+  // opens the dialog component
+  onAuthButtonClick(user: User | null): void {
+    if (user) {
+      this.logout();
+    } else {
+      //ensures that app dialog becomes visible
+      this.showLogin.set(true);
+      this.showLogout.set(true);
+    }
   }
-}
 
-  async onLogin(credentials: { email: string; password: string } | undefined): Promise<void> {
+  async onLogin(
+    credentials: { email: string; password: string } | undefined,
+  ): Promise<void> {
     try {
       if (credentials) {
         await this.authService.login(credentials.email, credentials.password);
