@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Header2Component } from '../shared/header2/header2.component';
-import { FooterComponent } from '../shared/footer/footer.component';
+import { Header2Component } from '../../shared/header2/header2.component';
+import { FooterComponent } from '../../shared/footer/footer.component';
 
 @Component({
   selector: 'app-data-protection',

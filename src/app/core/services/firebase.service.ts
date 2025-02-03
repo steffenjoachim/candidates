@@ -1,28 +1,22 @@
-import {
-  Injectable
-} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   Firestore,
   collection,
   collectionData,
-
   updateDoc,
   doc,
   query,
   where,
   getDocs,
-  addDoc
+  addDoc,
 } from '@angular/fire/firestore';
-import {
-  Observable,
-  from
-} from 'rxjs';
+import { Observable, from } from 'rxjs';
 
-import { Candidate } from '../interfaces/candidate.interface';
-import { UserVote } from '../interfaces/user-vote.interface';
+import { Candidate } from '../../interfaces/candidate.interface';
+import { UserVote } from '../../interfaces/user-vote.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FirebaseService {
   private collectionName = 'candidates';
@@ -30,17 +24,25 @@ export class FirebaseService {
 
   constructor(private firestore: Firestore) {}
 
-  loadAllCandidates(): Observable < Candidate[] > {
-    const candidatesCollection = collection(this.firestore, this.collectionName);
-    return from(getDocs(candidatesCollection).then(snapshot => {
-      return snapshot.docs.map(doc => ({
-        ...doc.data(),
-        id: doc.id,
-      } as Candidate));
-    }));
+  loadAllCandidates(): Observable<Candidate[]> {
+    const candidatesCollection = collection(
+      this.firestore,
+      this.collectionName,
+    );
+    return from(
+      getDocs(candidatesCollection).then((snapshot) => {
+        return snapshot.docs.map(
+          (doc) =>
+            ({
+              ...doc.data(),
+              id: doc.id,
+            }) as Candidate,
+        );
+      }),
+    );
   }
 
-  async updateVotes(id: string, newVotes: number): Promise < void > {
+  async updateVotes(id: string, newVotes: number): Promise<void> {
     const candidateDocRef = doc(this.firestore, `${this.collectionName}/${id}`);
     await updateDoc(candidateDocRef, { votes: newVotes });
   }
@@ -80,6 +82,6 @@ export class FirebaseService {
     if (!userSnapshot.empty) {
       const userDocRef = userSnapshot.docs[0].ref;
       await updateDoc(userDocRef, { votedFor: '' }); // resets the vote
+    }
   }
- }
 }
