@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../shared/header/header.component';
 import { ChancellorCandidateCardComponent } from '../chancellor-candidate-card/chancellor-candidate.card.component';
 import { FooterComponent } from '../shared/footer/footer.component';
-import { FirebaseService } from '../services/firebase.service';
-import { AuthService } from '../services/auth.service';
+import { FirebaseService } from '../core/services/firebase.service';
+import { AuthService } from '../core/services/auth.service';
 import { Candidate } from '../interfaces/candidate.interface';
 
 @Component({

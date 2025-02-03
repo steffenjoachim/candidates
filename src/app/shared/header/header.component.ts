@@ -1,6 +1,6 @@
 import { Component, OnInit, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Observable } from 'rxjs';
 import { User } from 'firebase/auth';
 import { DialogComponent } from '../../dialog/dialog/dialog.component';
