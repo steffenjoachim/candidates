@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
 import { Observable } from 'rxjs';
 import { User } from 'firebase/auth';
-import { DialogComponent } from '../../dialog/dialog/dialog.component';
+import { DialogComponent } from '../../core/home/components/dialog/dialog.component';
 import { ChangeDetectorRef } from '@angular/core';
 
 @Component({

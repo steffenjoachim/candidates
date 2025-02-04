@@ -12,8 +12,8 @@ import {
 } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 
-import { Candidate } from '../../interfaces/candidate.interface';
-import { UserVote } from '../../interfaces/user-vote.interface';
+import { Candidate } from '../interfaces/candidate.interface'; 
+import { UserVote } from '../interfaces/user-vote.interface';
 
 @Injectable({
   providedIn: 'root',

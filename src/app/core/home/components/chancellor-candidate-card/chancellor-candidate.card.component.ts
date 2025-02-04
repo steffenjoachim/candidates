@@ -1,11 +1,17 @@
-import { Component, Input, Output, EventEmitter, input, Signal } from '@angular/core';
-import { Candidate } from '../interfaces/candidate.interface';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  input,
+  Signal,
+} from '@angular/core';
+import { Candidate } from '../../../interfaces/candidate.interface';
 
-// Koponente speziefischer bezeichnen
 @Component({
   selector: 'app-chancellor-candidate-card',
   templateUrl: './chancellor-candidate.card.component.html',
-  styleUrls: ['./chancellor-candidate.card.component.css']
+  styleUrls: ['./chancellor-candidate.card.component.css'],
 })
 export class ChancellorCandidateCardComponent {
   candidate = input.required<Candidate>();
@@ -22,5 +28,4 @@ export class ChancellorCandidateCardComponent {
       }
     }
   }
-
 }

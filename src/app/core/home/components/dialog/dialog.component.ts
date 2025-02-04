@@ -2,8 +2,8 @@ import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
-import { FirebaseService } from '../../core/services/firebase.service';
-import { AuthService } from '../../core/services/auth.service';
+import { FirebaseService } from '../../../services/firebase.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-dialog',
