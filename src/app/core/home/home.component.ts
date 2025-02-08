@@ -54,7 +54,6 @@ export class HomeComponent implements OnInit {
     { id, newVotes }: { id: string; newVotes: number },
     candidate: Candidate,
   ): Promise<void> {
-    console.log(candidate);
     if (this.currentUser && this.currentUser.email) {
       const email = this.currentUser.email;
       try {
