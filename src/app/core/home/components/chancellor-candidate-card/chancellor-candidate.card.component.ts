@@ -1,10 +1,7 @@
 import {
   Component,
-  Input,
-  Output,
-  EventEmitter,
+  output,
   input,
-  Signal,
 } from '@angular/core';
 import { Candidate } from '../../../interfaces/candidate.interface';
 
@@ -17,7 +14,7 @@ export class ChancellorCandidateCardComponent {
   candidate = input.required<Candidate>();
   isLoggedIn = input<boolean>(false);
 
-  @Output() vote = new EventEmitter<{ id: string; newVotes: number }>();
+  vote = output<{ id: string; newVotes: number }>();
 
   incrementVotes(): void {
     if (this.isLoggedIn()) {
